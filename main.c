@@ -37,6 +37,7 @@ void print_scoreboard(struct ilist* program);
 void print_stations(struct slist* stations);
 void print_registers();
 int load_program(const char* filename, struct ilist* prog);
+int load_stations(const char* filename, struct slist* stations);
 void print_state(struct state* s, char* reg_names[]);
 
 
@@ -45,6 +46,8 @@ int main(void) {
     char* reg_names[] = {"F0", "F2", "F4", "F6", "F8", "F10", "F12", "F14"};    
     char* reg_contents[] = {"", "", "", "", "", "", "", ""};
     char input;
+
+    setbuf(stdout,0);
 
     // program loading
     struct ilist* program = create_inst_list(10);
@@ -55,13 +58,17 @@ int main(void) {
 
     // create reservation stations
     struct slist* stations = create_station_list(10);
-    add_station(stations, "Add1", addsub);
+    if(!stations){
+        puts("list creation failed");
+    }
+    load_stations("stations.txt", stations);
+    /*add_station(stations, "Add1", addsub);
     add_station(stations, "Add2", addsub);
     add_station(stations, "Add3", addsub);
     add_station(stations, "Mul1", muldiv);
     add_station(stations, "Mul2", muldiv);
     add_station(stations, "Load1", loadstore);
-    add_station(stations, "Load2", loadstore);
+    add_station(stations, "Load2", loadstore);*/
 
     // init simulation state context
     struct state context;
@@ -87,8 +94,8 @@ int main(void) {
             case 'a':
                 return 0;
         }
-        system("clear");    // UNIX
-        //system("cls");    // DOS
+        //system("clear");    // UNIX
+        system("cls");    // DOS
     }
 }
 
@@ -114,6 +121,28 @@ int load_program(const char* filename, struct ilist* prog) {
     while (fgets(buffer, sizeof(buffer), source)) {
         line = strtok(buffer, "\n");        // remove trailing newline
         int result = add_inst(prog, line);
+        if (!result) {
+            inst_details(&prog->data[prog->occupied-1]);
+        } else {
+            printf ("Error!!, code %d\n", result);
+            return -1;
+        }
+    }
+    return 0;
+}
+
+int load_stations(const char* filename, struct slist* stations){
+    char buffer[20];
+    char* line;
+
+    FILE *source = fopen(filename, "rt");
+    if (!source) {
+        return -1;
+    }
+
+    while (fgets(buffer, sizeof(buffer), source)) {
+        line = strtok(buffer, "\n");        // remove trailing newline
+        int result = add_station(stations, line);
         if (!result) {
             //inst_details(&prog->data[prog->occupied-1]);
         } else {

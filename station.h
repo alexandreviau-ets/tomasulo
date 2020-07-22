@@ -65,8 +65,7 @@ struct slist* create_station_list(int initial_size);
 *       
 *   Parameters : 
 *       struct slist* list		: target slist
-* 		char* name				: name of new station
-*		enum opclasses type 	: execution unit type served by this station
+* 		char* text              : source text of the station, to be decoded
 *
 *   Return : 0 if succesfull, non-zero otherwise
 *
@@ -75,7 +74,7 @@ struct slist* create_station_list(int initial_size);
 *			if the list is full, enough memory for doubling the size of the
 *			list is allocated.
 *****************************************************************************/
-int add_station(struct slist* list, char* name, enum opclasses type);
+int add_station(struct slist* list, char* text);
 
 
 /****** print_station *******************************************************
