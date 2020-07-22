@@ -1,0 +1,8 @@
+Add1, addsub
+Add2, addsub
+Add3, addsub
+Add4, addsub
+Mul1, muldiv
+Mul2, muldiv
+Load1, loadstore
+Load2, loadstore

@@ -44,13 +44,31 @@ struct slist* create_station_list(int initial_size) {
 }
 
 
-int add_station(struct slist* list, char* name, enum opclasses type) {
+int add_station(struct slist* list, char* text) {
+    enum opclasses type;
+
     if (list->occupied == list->size) {
         _grow(list);
     }
 
     if (list->occupied == list->size) {
         // _grow failed, aborting
+        return -1;
+    }
+
+    char* name = strtok(text, ",");
+    char* type_str = strtok(NULL," \0");
+
+    if(!strcmp("addsub", type_str)){
+        type = addsub;
+    }
+    else if(!strcmp("muldiv", type_str)){
+        type = muldiv;
+    }
+    else if(!strcmp("loadstore", type_str)){
+        type = loadstore;
+    }
+    else{
         return -1;
     }
 
